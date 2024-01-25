@@ -140,10 +140,10 @@ const Gallery = () => {
   const uniqueCarTypes = Array.from(new Set(carData.map((car) => car.type)));
 
   return (
-    <div>
+    <div className="container">
       <Navbar />
-      <h2>Welcome to gallery!</h2>
-      <div id="myBtnContainer">
+      <h2 style={{ textAlign: "center" }}>Welcome to gallery!</h2>
+      <div id="myBtnContainer" className="btn-container">
         <button
           id="all"
           className={`btn ${currentColumn === "all" ? "active" : ""}`}
