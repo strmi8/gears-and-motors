@@ -11,12 +11,16 @@ import {
   getDoc,
   addDoc,
   auth,
+  setDoc,
+  deleteDoc,
 } from "../firebase";
 
 const PostView = () => {
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState("");
   const [commentsList, setCommentsList] = useState([]);
+  const [processingVote, setProcessingVote] = useState(false);
+  const [userVote, setUserVote] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -87,24 +91,80 @@ const PostView = () => {
     fetchComments();
   }, [post]);
 
-  const handleUpvote = async () => {
+  useEffect(() => {
+    const fetchUserVote = async () => {
+      if (!post) return;
+
+      try {
+        const user = auth.currentUser;
+        const userVoteRef = doc(db, `posts/${post.id}/userVotes`, user.uid);
+        const userVoteDoc = await getDoc(userVoteRef);
+        if (userVoteDoc.exists()) {
+          setUserVote(userVoteDoc.data().vote);
+        } else {
+          setUserVote(null);
+        }
+      } catch (error) {
+        console.error("Error fetching user's vote:", error);
+      }
+    };
+
+    fetchUserVote();
+  }, [post]);
+
+  const handleVote = async (type) => {
+    if (processingVote) return;
+
     try {
-      await updateDoc(collection(db, "posts", post.id), {
-        upvotes: post.upvotes + 1,
+      setProcessingVote(true);
+
+      const user = auth.currentUser;
+      const userVoteRef = doc(db, `posts/${post.id}/userVotes`, user.uid);
+      const userVoteDoc = await getDoc(userVoteRef);
+      let voteChange = 0;
+
+      if (userVoteDoc.exists()) {
+        const userVoteData = userVoteDoc.data();
+        if (userVoteData.vote === type) {
+          await deleteDoc(userVoteRef);
+          voteChange = type === "upvote" ? -1 : 1;
+        } else {
+          await updateDoc(userVoteRef, { vote: type });
+          voteChange = type === "upvote" ? 2 : -2;
+        }
+      } else {
+        await setDoc(userVoteRef, { vote: type });
+        voteChange = type === "upvote" ? 1 : -1;
+      }
+
+      await updateDoc(doc(db, "posts", post.id), {
+        votes: post.votes + voteChange,
       });
+
+      const postRefetch = await getDoc(doc(db, "posts", post.id));
+      if (postRefetch.exists()) {
+        const postData = postRefetch.data();
+        setPost({
+          id: postRefetch.id,
+          ...postData,
+          createdBy: post.createdBy,
+        });
+      }
+
+      setUserVote(type);
+      setProcessingVote(false);
     } catch (error) {
-      console.error("Error updating upvotes:", error);
+      console.error("Error handling vote:", error);
+      setProcessingVote(false);
     }
   };
 
-  const handleDownvote = async () => {
-    try {
-      await updateDoc(collection(db, "posts", post.id), {
-        downvotes: post.downvotes + 1,
-      });
-    } catch (error) {
-      console.error("Error updating downvotes:", error);
-    }
+  const handleUpvote = () => {
+    handleVote("upvote");
+  };
+
+  const handleDownvote = () => {
+    handleVote("downvote");
   };
 
   const handleCommentSubmit = async () => {
@@ -120,18 +180,13 @@ const PostView = () => {
       );
       setComment("");
 
-      // Fetch the new comment data
       const newCommentDoc = await getDoc(newCommentRef);
       if (newCommentDoc.exists()) {
         const newCommentData = newCommentDoc.data();
-
-        // Fetch the user's display name
         const userRef = doc(db, "users", newCommentData.authorId);
         const userSnapshot = await getDoc(userRef);
         if (userSnapshot.exists()) {
           const userData = userSnapshot.data();
-
-          // Add the new comment to the comments list
           setCommentsList([
             ...commentsList,
             {
@@ -156,10 +211,21 @@ const PostView = () => {
       <h3>{post.title}</h3>
       <img src={post.imageUrl} alt={post.title} />
       <p>Created by: {post.createdBy}</p>
-      <p>Upvotes: {post.upvotes}</p>
-      <p>Downvotes: {post.downvotes}</p>
-      <button onClick={handleUpvote}>Upvote</button>
-      <button onClick={handleDownvote}>Downvote</button>
+      <p>Votes: {post.votes}</p>
+      <button
+        onClick={handleUpvote}
+        disabled={processingVote}
+        style={{ backgroundColor: userVote === "upvote" ? "green" : "white" }}
+      >
+        Upvote
+      </button>
+      <button
+        onClick={handleDownvote}
+        disabled={processingVote}
+        style={{ backgroundColor: userVote === "downvote" ? "red" : "white" }}
+      >
+        Downvote
+      </button>
       <input
         type="text"
         placeholder="Add comment"
