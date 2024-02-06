@@ -14,6 +14,7 @@ import {
   setDoc,
   deleteDoc,
 } from "../firebase";
+import Navbar from "../components/navbar/Navbar";
 
 const PostView = () => {
   const [post, setPost] = useState(null);
@@ -74,10 +75,16 @@ const PostView = () => {
           const userDoc = await getDoc(doc(db, "users", authorId));
           if (userDoc.exists()) {
             const userData = userDoc.data();
+            const likesQuerySnapshot = await getDocs(
+              collection(db, `posts/${post.id}/comments/${commentDoc.id}/likes`)
+            );
+            const likes = likesQuerySnapshot.docs.map((doc) => doc.data().uid);
             comments.push({
               id: commentDoc.id,
               ...commentData,
               authorDisplayName: userData.displayName,
+              likes: likes,
+              updating: false,
             });
           }
         }
@@ -176,6 +183,8 @@ const PostView = () => {
           authorId: user.uid,
           text: comment,
           createdAt: new Date(),
+          totalLikes: 0,
+          updating: false,
         }
       );
       setComment("");
@@ -193,6 +202,7 @@ const PostView = () => {
               id: newCommentDoc.id,
               ...newCommentData,
               authorDisplayName: userData.displayName,
+              likes: [],
             },
           ]);
         }
@@ -202,12 +212,90 @@ const PostView = () => {
     }
   };
 
+  const handleLike = async (commentId, index) => {
+    try {
+      setCommentsList((prevCommentsList) => {
+        return prevCommentsList.map((comment, i) => {
+          if (i === index) {
+            return { ...comment, updating: true };
+          }
+          return comment;
+        });
+      });
+
+      const user = auth.currentUser;
+      const commentRef = doc(db, `posts/${post.id}/comments`, commentId);
+      const commentDoc = await getDoc(commentRef);
+      if (commentDoc.exists()) {
+        const commentData = commentDoc.data();
+        const likesCollectionRef = collection(
+          db,
+          `posts/${post.id}/comments/${commentId}/likes`
+        );
+        const likeQuery = query(
+          likesCollectionRef,
+          where("uid", "==", user.uid)
+        );
+        const likeQuerySnapshot = await getDocs(likeQuery);
+        if (likeQuerySnapshot.empty) {
+          await addDoc(likesCollectionRef, { uid: user.uid });
+          await updateDoc(commentRef, {
+            totalLikes: commentData.totalLikes + 1,
+          });
+          setCommentsList((prevCommentsList) => {
+            return prevCommentsList.map((comment, i) => {
+              if (i === index) {
+                return {
+                  ...comment,
+                  totalLikes: comment.totalLikes + 1,
+                  likes: [...comment.likes, user.uid],
+                  updating: false,
+                };
+              }
+              return comment;
+            });
+          });
+        } else {
+          const likeDoc = likeQuerySnapshot.docs[0];
+          await deleteDoc(likeDoc.ref);
+          await updateDoc(commentRef, {
+            totalLikes: commentData.totalLikes - 1,
+          });
+          setCommentsList((prevCommentsList) => {
+            return prevCommentsList.map((comment, i) => {
+              if (i === index) {
+                return {
+                  ...comment,
+                  totalLikes: comment.totalLikes - 1,
+                  likes: comment.likes.filter((uid) => uid !== user.uid),
+                  updating: false,
+                };
+              }
+              return comment;
+            });
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error handling like:", error);
+      setCommentsList((prevCommentsList) => {
+        return prevCommentsList.map((comment, i) => {
+          if (i === index) {
+            return { ...comment, updating: false };
+          }
+          return comment;
+        });
+      });
+    }
+  };
+
   if (!post) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
+      <Navbar />
       <h3>{post.title}</h3>
       <img src={post.imageUrl} alt={post.title} />
       <p>Created by: {post.createdBy}</p>
@@ -238,6 +326,22 @@ const PostView = () => {
           <li key={index}>
             <p>{comment.text}</p>
             <p>Author: {comment.authorDisplayName}</p>
+            <p>Likes: {comment.totalLikes}</p>
+            <button
+              onClick={() => {
+                if (!comment.updating) {
+                  handleLike(comment.id, index);
+                }
+              }}
+              disabled={comment.updating}
+              style={{
+                backgroundColor: comment.likes.includes(auth.currentUser.uid)
+                  ? "green"
+                  : "white",
+              }}
+            >
+              {comment.likes.includes(auth.currentUser.uid) ? "Liked" : "Like"}
+            </button>
           </li>
         ))}
       </ul>

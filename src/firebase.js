@@ -29,6 +29,36 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
+// Function to check if the user is authenticated
+const isUserAuthenticated = async () => {
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
+      return userDoc.exists();
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error checking user authentication:", error);
+    return false;
+  }
+};
+
+// Function to log out the user
+const logoutUser = async () => {
+  try {
+    await auth.signOut();
+    // Clear user authentication data from IndexedDB or Firebase's local storage if needed
+    // localStorage.removeItem("firebase:authUser:[DEFAULT]");
+    // Redirect user to the login page if needed
+    // navigate("/login");
+  } catch (error) {
+    console.error("Error logging out user:", error);
+  }
+};
+
 export {
   app,
   auth,
@@ -46,5 +76,7 @@ export {
   getDownloadURL,
   getDoc, // Export getDoc
   setDoc, // Export setDoc
-  deleteDoc // Export deleteDoc
+  deleteDoc, // Export deleteDoc
+  isUserAuthenticated, // Export isUserAuthenticated
+  logoutUser // Export logoutUser
 };

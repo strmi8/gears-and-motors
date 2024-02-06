@@ -1,37 +1,66 @@
-import React, { useState } from "react";
-
-import "./Navbar.css";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { isUserAuthenticated, logoutUser } from "../../firebase";
+import "./Navbar.css";
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const isAuthenticated = await isUserAuthenticated();
+      setAuthenticated(isAuthenticated);
+    };
+    checkAuthentication();
+  }, []);
+
+  const handleLogout = async () => {
+    await logoutUser();
+    setAuthenticated(false);
+    navigate("/login");
+  };
 
   return (
     <nav>
       <Link to="/" className="title">
         Website
       </Link>
-      <div className="menu" onClick={() => setMenuOpen(!menuOpen)}>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <ul className={menuOpen ? "open" : ""}>
+      <ul>
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/" className="nav-link">
+            Home
+          </Link>
         </li>
         <li>
-          <Link to="/gallery">Gallery</Link>
+          <Link to="/gallery" className="nav-link">
+            Gallery
+          </Link>
         </li>
         <li>
-          <Link to="/rateit">Rate My Car</Link>
+          <Link to="/rateit" className="nav-link">
+            Rate My Car
+          </Link>
         </li>
         <li>
-          <Link to="/organiseevent">Organize an event</Link>
+          <Link to="/organiseevent" className="nav-link">
+            Organize an event
+          </Link>
         </li>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
+        {authenticated ? (
+          <li>
+            <Link className="nav-link" onClick={handleLogout}>
+              Logout
+            </Link>
+          </li>
+        ) : (
+          <li>
+            <Link to="/login" className="nav-link">
+              Login
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   );
