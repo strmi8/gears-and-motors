@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   db,
   collection,
@@ -23,18 +23,19 @@ const PostView = () => {
   const [processingVote, setProcessingVote] = useState(false);
   const [userVote, setUserVote] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchPost = async () => {
-      const q = query(
-        collection(db, "posts"),
-        where("createdBy", "==", "NZMgF7fB3HYGVKdd2B4aYDSlIwk1")
-      );
+      const postId = location.state?.postId;
+      if (!postId) {
+        navigate("/posts-view");
+        return;
+      }
 
       try {
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
-          const postDoc = querySnapshot.docs[0];
+        const postDoc = await getDoc(doc(db, "posts", postId));
+        if (postDoc.exists()) {
           const postData = postDoc.data();
           const userRef = doc(db, "users", postData.createdBy);
           const userSnapshot = await getDoc(userRef);
@@ -45,11 +46,9 @@ const PostView = () => {
               ...postData,
               createdBy: userData.displayName,
             });
-          } else {
-            console.log("User document not found");
           }
         } else {
-          console.log("No matching post found");
+          console.log("Post not found");
         }
       } catch (error) {
         console.error("Error fetching post:", error);

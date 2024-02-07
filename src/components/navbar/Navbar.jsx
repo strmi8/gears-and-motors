@@ -39,7 +39,7 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/rateit" className="nav-link">
+          <Link to="/posts-view" className="nav-link">
             Rate My Car
           </Link>
         </li>

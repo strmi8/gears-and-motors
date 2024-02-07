@@ -8,6 +8,8 @@ import './App.css'
 import Gallery from "./pages/Gallery.jsx";
 import PostCreationPage from "./pages/PostCreationPage.jsx";
 import PostView from "./pages/PostView.jsx";
+import PostsView from "./pages/PostsView.jsx";
+
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -35,6 +37,8 @@ function App() {
           <Route path="gallery" element={<Gallery />} />
           <Route path="create-post" element={<PostCreationPage />} />
           <Route path="post-view" element={<PostView />} />
+          <Route path="posts-view" element={<PostsView />} />
+
           <Route path="home" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
