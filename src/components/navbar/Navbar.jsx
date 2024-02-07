@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { isUserAuthenticated, logoutUser } from "../../firebase";
 import "./Navbar.css";
+import gmLogo from "../../images/gmlogo.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [authenticated, setAuthenticated] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -24,10 +26,18 @@ const Navbar = () => {
 
   return (
     <nav>
-      <Link to="/" className="title">
-        Website
+      <Link to="/" className="logo">
+        <img src={gmLogo} alt="GM Logo" />
       </Link>
-      <ul>
+      <div
+        className={`menu ${menuOpen ? "open" : ""}`}
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <ul className={menuOpen ? "open" : ""}>
         <li>
           <Link to="/" className="nav-link">
             Home

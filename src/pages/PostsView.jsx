@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { db, collection, getDocs, query, doc, getDoc } from "../firebase"; // Import doc explicitly
+import { db, collection, getDocs, query, doc, getDoc } from "../firebase";
 import { orderBy, limit } from "firebase/firestore";
 import Navbar from "../components/navbar/Navbar";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
+import "./PostsView.css";
 
 const PostsView = () => {
   const [posts, setPosts] = useState([]);
-  const navigate = useNavigate(); // Use useNavigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -22,14 +23,16 @@ const PostsView = () => {
         const postsData = [];
         for (const docSnapshot of querySnapshot.docs) {
           const postData = docSnapshot.data();
-          const userDocRef = doc(db, "users", postData.createdBy); // Use doc function from firebase
+          const userDocRef = doc(db, "users", postData.createdBy);
           const userDocSnap = await getDoc(userDocRef);
           if (userDocSnap.exists()) {
             const userData = userDocSnap.data();
             const createdAt = postData.createdAt.toDate();
             const formattedDate = formatDate(createdAt);
 
-            // Fetch top 3 comments for each post
+            // Accessing votes directly from postData
+            const votes = postData.votes || 0;
+
             const commentsCollectionRef = collection(
               db,
               `posts/${docSnapshot.id}/comments`
@@ -43,13 +46,14 @@ const PostsView = () => {
             const topComments = [];
             for (const commentDoc of commentsSnapshot.docs) {
               const commentData = commentDoc.data();
-              const authorDocRef = doc(db, "users", commentData.authorId); // Use doc function from firebase
+              const authorDocRef = doc(db, "users", commentData.authorId);
               const authorDocSnap = await getDoc(authorDocRef);
               if (authorDocSnap.exists()) {
                 const authorData = authorDocSnap.data();
                 topComments.push({
                   id: commentDoc.id,
-                  authorDisplayName: authorData.displayName, // Author's display name
+                  authorDisplayName: authorData.displayName,
+                  authorPhotoURL: authorData.photoURL,
                   totalLikes: commentData.totalLikes,
                   text: commentData.text,
                 });
@@ -60,8 +64,10 @@ const PostsView = () => {
               id: docSnapshot.id,
               ...postData,
               createdAt: formattedDate,
-              createdBy: userData.displayName, // Post creator's display name
-              topComments: topComments, // Include top 3 comments
+              createdBy: userData.displayName,
+              creatorPhotoURL: userData.photoURL,
+              topComments: topComments,
+              votes: votes,
             });
           }
         }
@@ -88,50 +94,78 @@ const PostsView = () => {
   };
 
   const handlePostClick = (postId) => {
-    navigate(`/post-view`, { state: { postId } }); // Navigate to post view page with postId as state
+    navigate(`/post-view`, { state: { postId } });
   };
 
   return (
-    <div>
+    <>
       <Navbar />
-      <h1>All Posts</h1>
-      {posts.map((post) => (
-        <div key={post.id}>
-          <h3>
-            <a href="#" onClick={() => handlePostClick(post.id)}>
-              {post.title}
-            </a>
-          </h3>
-          {post.imageUrl && (
-            <img
-              src={post.imageUrl}
-              alt={post.title}
-              onClick={() => handlePostClick(post.id)}
-              style={{ cursor: "pointer" }}
-            />
-          )}
-          <p>
-            Created by: {post.createdBy} {post.createdAt}
-          </p>
-          {post.topComments.length > 0 ? (
-            <div>
-              <p>Top liked comments:</p>
-              <ul>
-                {post.topComments.map((comment, index) => (
-                  <li key={index}>
-                    <p>{comment.text}</p>
-                    <p>Author: {comment.authorDisplayName}</p>
-                    <p>Likes: {comment.totalLikes}</p>
-                  </li>
-                ))}
-              </ul>
+      <div className="posts-view-container">
+        <h1>All Posts</h1>
+        {posts.map((post) => (
+          <div
+            key={post.id}
+            className="post-container"
+            onClick={() => handlePostClick(post.id)}
+          >
+            <div className="post-item">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                {/* Display number of votes */}
+                <p style={{ marginRight: "1rem" }}>Votes: {post.votes}</p>
+                {/* Display post title */}
+                <div className="post-header">
+                  <h3 className="post-title">
+                    <span>{post.title}</span>
+                  </h3>
+                </div>
+              </div>
+              <p className="created-by">
+                Created by:{" "}
+                <img
+                  src={post.creatorPhotoURL}
+                  alt={post.createdBy}
+                  className="avatar"
+                />
+                {post.createdBy} {post.createdAt}
+              </p>
+
+              {post.imageUrl && (
+                <img
+                  src={post.imageUrl}
+                  alt={post.title}
+                  className="post-image"
+                />
+              )}
+
+              {/* Render comments if any */}
+              {post.topComments.length > 0 ? (
+                <div>
+                  <p className="comments-list">
+                    {post.topComments.map((comment, index) => (
+                      <span key={index} className="comment-item">
+                        <p id={`comment-${index}`} className="comment-text">
+                          <img
+                            src={comment.authorPhotoURL}
+                            alt={comment.authorDisplayName}
+                            className="avatar"
+                          />
+                          {comment.authorDisplayName}: {comment.text} - Likes:{" "}
+                          {comment.totalLikes}
+                        </p>
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              ) : (
+                <p id="no-comments" className="no-comments">
+                  Be the first to comment
+                </p>
+              )}
             </div>
-          ) : (
-            <p>No comments</p>
-          )}
-        </div>
-      ))}
-    </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 

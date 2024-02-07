@@ -142,7 +142,7 @@ const Gallery = () => {
   return (
     <div className="container">
       <Navbar />
-      <h2 style={{ textAlign: "center" }}>Welcome to gallery!</h2>
+      <h2 style={{ textAlign: "center" }}>Welcome to news and gallery!</h2>
       <div id="myBtnContainer" className="btn-container">
         <button
           id="all"
@@ -184,7 +184,7 @@ const Gallery = () => {
                 }}
               />
               <h4>{car.name}</h4>
-              <a href={car.link}>Click for more about {car.name}</a>
+              <a href={car.link}>Find out news about {car.name}</a>
             </div>
           </div>
         ))}

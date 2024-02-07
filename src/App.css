@@ -2,3 +2,13 @@ body {
     margin: 0;
     padding: 0;
   }
+
+  /* Hide scrollbar but allow scrolling */
+body {
+  overflow-y: scroll; /* Enable vertical scrolling */
+}
+
+/* Hide scrollbar for webkit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  display: none; /* Hide the scrollbar */
+}
