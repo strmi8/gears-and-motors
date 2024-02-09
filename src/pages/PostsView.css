@@ -10,6 +10,7 @@
   width: 80%; /* Set the width of the post containers */
   margin-bottom: 20px;
   text-align: left;
+  cursor: pointer;
 }
 
 .post-container :hover{
@@ -54,12 +55,10 @@
   border-radius: 3%;
 }
 
-.comments-list {
-  list-style-type: none;
-  padding: 0;
-}
-
 .comment-item {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
   margin-bottom: 10px;
 }
 
@@ -72,13 +71,14 @@
   align-items: center;
 }
 
-.avatar {
+.avatar-posts {
   vertical-align: middle;
   margin-right: 10px;
-  width: 50px; /* Keep the width of the avatar */
-  height: 40px; /* Keep the height of the avatar */
-  border-radius: 50%; /* Make the avatar round */
+  width: 60px;
+  height: auto;
+  border-radius: 50%;
 }
+
 
 .no-comments {
   text-align: center; /* Center the "no comments" text */
@@ -90,5 +90,3 @@
   color: black; /* Set initial color */
   cursor: pointer; /* Set cursor to pointer */
 }
-
-

@@ -3,7 +3,7 @@ import { db, collection, getDocs, query, doc, getDoc } from "../firebase";
 import { orderBy, limit } from "firebase/firestore";
 import Navbar from "../components/navbar/Navbar";
 import { useNavigate } from "react-router-dom";
-import "./PostsView.css";
+import "../pages/PostsView.css";
 
 const PostsView = () => {
   const [posts, setPosts] = useState([]);
@@ -124,7 +124,7 @@ const PostsView = () => {
                 <img
                   src={post.creatorPhotoURL}
                   alt={post.createdBy}
-                  className="avatar"
+                  className="avatar-posts"
                 />
                 {post.createdBy} {post.createdAt}
               </p>
@@ -147,7 +147,7 @@ const PostsView = () => {
                           <img
                             src={comment.authorPhotoURL}
                             alt={comment.authorDisplayName}
-                            className="avatar"
+                            className="avatar-posts"
                           />
                           {comment.authorDisplayName}: {comment.text} - Likes:{" "}
                           {comment.totalLikes}
