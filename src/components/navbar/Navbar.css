@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
+  
 }
 
 .active {
@@ -16,7 +17,9 @@ nav {
   color: white;
   position: sticky;
   top: 0;
+  z-index: 1000; /* Ensure the navbar appears above other elements */
 }
+
 
 nav .title {
   font-size: 1.5rem;
@@ -57,7 +60,9 @@ nav .menu {
   width: 2.25rem;
   height: 2rem;
   cursor: pointer;
+  z-index: 1000; /* Ensure the menu appears above other elements */
 }
+
 
 nav .menu span {
   height: 0.4rem;
@@ -86,6 +91,7 @@ nav .menu span {
 
   nav ul.open {
     display: flex;
+    background-color: #0f172a;
   }
 
   nav ul li {
