@@ -15,6 +15,11 @@ import {
   deleteDoc,
 } from "../firebase";
 import Navbar from "../components/navbar/Navbar";
+import "../pages/PostView.css";
+import arrowUp from "../images/up-arrow.png";
+import arrowUpFilled from "../images/up-arrow-filled.png";
+import arrowDown from "../images/down-arrow.png";
+import arrowDownFilled from "../images/down-arrow-filled.png";
 
 const PostView = () => {
   const [post, setPost] = useState(null);
@@ -45,6 +50,7 @@ const PostView = () => {
               id: postDoc.id,
               ...postData,
               createdBy: userData.displayName,
+              creatorPhotoURL: userData.photoURL, // Add creator's photo URL
             });
           }
         } else {
@@ -82,6 +88,7 @@ const PostView = () => {
               id: commentDoc.id,
               ...commentData,
               authorDisplayName: userData.displayName,
+              authorPhotoURL: userData.photoURL, // Add author's photo URL
               likes: likes,
               updating: false,
             });
@@ -154,6 +161,7 @@ const PostView = () => {
           id: postRefetch.id,
           ...postData,
           createdBy: post.createdBy,
+          creatorPhotoURL: post.creatorPhotoURL, // Add creator's photo URL
         });
       }
 
@@ -201,6 +209,7 @@ const PostView = () => {
               id: newCommentDoc.id,
               ...newCommentData,
               authorDisplayName: userData.displayName,
+              authorPhotoURL: userData.photoURL, // Add author's photo URL
               likes: [],
             },
           ]);
@@ -293,58 +302,136 @@ const PostView = () => {
   }
 
   return (
-    <div>
+    <>
       <Navbar />
-      <h3>{post.title}</h3>
-      <img src={post.imageUrl} alt={post.title} />
-      <p>Created by: {post.createdBy}</p>
-      <p>Votes: {post.votes}</p>
-      <button
-        onClick={handleUpvote}
-        disabled={processingVote}
-        style={{ backgroundColor: userVote === "upvote" ? "green" : "white" }}
-      >
-        Upvote
-      </button>
-      <button
-        onClick={handleDownvote}
-        disabled={processingVote}
-        style={{ backgroundColor: userVote === "downvote" ? "red" : "white" }}
-      >
-        Downvote
-      </button>
-      <input
-        type="text"
-        placeholder="Add comment"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-      />
-      <button onClick={handleCommentSubmit}>Comment</button>
-      <ul>
-        {commentsList.map((comment, index) => (
-          <li key={index}>
-            <p>{comment.text}</p>
-            <p>Author: {comment.authorDisplayName}</p>
-            <p>Likes: {comment.totalLikes}</p>
-            <button
-              onClick={() => {
-                if (!comment.updating) {
-                  handleLike(comment.id, index);
-                }
-              }}
-              disabled={comment.updating}
-              style={{
-                backgroundColor: comment.likes.includes(auth.currentUser.uid)
-                  ? "green"
-                  : "white",
-              }}
-            >
-              {comment.likes.includes(auth.currentUser.uid) ? "Liked" : "Like"}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
+      <div id="post-view-container">
+        <div id="post-content">
+          <h3>{post.title}</h3>
+          <img src={post.imageUrl} alt={post.title} />
+          <p className="created-by">
+            Created by:{" "}
+            {post.creatorPhotoURL && (
+              <span>
+                <img
+                  src={post.creatorPhotoURL}
+                  alt={post.createdBy}
+                  className="avatar"
+                />
+                &nbsp;
+              </span>
+            )}
+            {post.createdBy}
+          </p>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={userVote === "upvote" ? arrowUpFilled : arrowUp}
+              alt="Upvote"
+              onClick={handleUpvote}
+              className="upvote-downvote-img"
+              style={{ marginRight: "5px" }}
+            />
+            <p style={{ marginRight: "5px" }}>{post.votes}</p>
+            <img
+              src={userVote === "downvote" ? arrowDownFilled : arrowDown}
+              alt="Downvote"
+              onClick={handleDownvote}
+              className="upvote-downvote-img"
+            />
+          </div>
+
+          <input
+            type="text"
+            placeholder="Add comment"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <button onClick={handleCommentSubmit}>Comment</button>
+          <ul
+            style={{
+              maxWidth: 500,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {commentsList.map((comment, index) => (
+              <li key={index}>
+                <div className="comment" style={{ display: "flex" }}>
+                  {comment.authorPhotoURL && (
+                    <img
+                      src={comment.authorPhotoURL}
+                      alt={comment.authorDisplayName}
+                      className="avatar"
+                      style={{ marginRight: "10px" }}
+                    />
+                  )}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flex: "1",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span
+                        className="comment-text"
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "normal",
+                          wordWrap: "break-word",
+                          textAlign: "left",
+                        }}
+                      >
+                        {comment.authorDisplayName}: {comment.text}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: 5,
+                      }}
+                    >
+                      <span
+                        className="likes-count"
+                        style={{ marginRight: "10px" }}
+                      >
+                        - Likes: {comment.totalLikes}
+                      </span>
+                      <button
+                        onClick={() => {
+                          if (!comment.updating) {
+                            handleLike(comment.id, index);
+                          }
+                        }}
+                        disabled={comment.updating}
+                        style={{
+                          backgroundColor: comment.likes.includes(
+                            auth.currentUser.uid
+                          )
+                            ? "#1d4ed8"
+                            : "white",
+                        }}
+                      >
+                        {comment.likes.includes(auth.currentUser.uid)
+                          ? "Liked"
+                          : "Like"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </>
   );
 };
 

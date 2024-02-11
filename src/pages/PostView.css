@@ -1,0 +1,101 @@
+body{
+  font-family: Arial, sans-serif;
+}
+
+#post-view-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+
+}
+
+#post-content {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+
+  font-family: Arial, sans-serif;
+
+}
+
+#post-content input[type="text"] {
+  margin-bottom: 10px;
+  font-family: Arial, sans-serif;
+
+}
+
+#post-content ul {
+  list-style-type: none;
+  padding: 0;
+  font-family: Arial, sans-serif;
+
+}
+
+#post-content li {
+  margin-bottom: 10px;
+  font-family: Arial, sans-serif;
+
+}
+
+#post-content button {
+  font-family: Arial, sans-serif;
+
+}
+
+.comment {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  margin-bottom: 10px; /* Add margin at the bottom of each comment */
+  font-family: Arial, sans-serif;
+
+}
+
+.avatar {
+  width: auto;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.comment-text {
+  margin-right: 10px; /* Add margin to the right of the comment text */
+  font-family: Arial, sans-serif;
+
+}
+
+.likes-count {
+  margin-right: 10px; /* Add margin to the right of the likes count */
+  font-family: Arial, sans-serif;
+
+}
+
+.like-button {
+  margin-left: auto; /* Push the like button to the right edge of the container */
+  font-family: Arial, sans-serif;
+
+}
+
+.comment-item {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  margin-bottom: 10px; /* Add margin at the bottom of each comment */
+}
+
+.comment-text .avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.upvote-downvote-img {
+  cursor: pointer;
+  width: 30px;
+}
+
+.comment img {
+  align-self: flex-start;
+  margin-right: 5px;
+}
+
+
