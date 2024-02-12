@@ -72,6 +72,8 @@ const PostView = () => {
         const postDoc = await getDoc(doc(db, "posts", postId));
         if (postDoc.exists()) {
           const postData = postDoc.data();
+          const createdAtTimestamp = postData.createdAt.toDate(); // Convert Firestore timestamp to JavaScript Date object
+          const createdAtString = formatCreatedAtDate(createdAtTimestamp); // Format the date into a human-readable string
           const userRef = doc(db, "users", postData.createdBy);
           const userSnapshot = await getDoc(userRef);
           if (userSnapshot.exists()) {
@@ -80,7 +82,8 @@ const PostView = () => {
               id: postDoc.id,
               ...postData,
               createdBy: userData.displayName,
-              creatorPhotoURL: userData.photoURL, // Add creator's photo URL
+              creatorPhotoURL: userData.photoURL,
+              createdAt: createdAtString, // Use the formatted date string
             });
           }
         } else {
@@ -346,6 +349,18 @@ const PostView = () => {
     return <div>Loading...</div>;
   }
 
+  function formatCreatedAtDate(date) {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    return `${day}.${month}.${year}. ${hours}:${
+      minutes < 10 ? "0" : ""
+    }${minutes}`;
+  }
+
   return (
     <>
       <Navbar />
@@ -375,7 +390,7 @@ const PostView = () => {
                 &nbsp;
               </span>
             )}
-            {post.createdBy}
+            {post.createdBy} {post.createdAt}
           </p>
           <div style={{ display: "flex", alignItems: "center" }}>
             <img
