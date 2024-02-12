@@ -31,7 +31,8 @@ const PostView = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentUserPhotoURL, setCurrentUserPhotoURL] = useState(null);
-  const [fullscreenImage, setFullscreenImage] = useState(null); // New state for fullscreen image URL
+  const [fullscreenImage, setFullscreenImage] = useState(null);
+  const [loadingComments, setLoadingComments] = useState(true); // Added loading state for comments
 
   useEffect(() => {
     const fetchUserPhoto = async () => {
@@ -98,6 +99,7 @@ const PostView = () => {
       if (!post) return;
 
       try {
+        setLoadingComments(true); // Set loading state to true before fetching comments
         const commentsQuerySnapshot = await getDocs(
           collection(db, `posts/${post.id}/comments`)
         );
@@ -125,6 +127,7 @@ const PostView = () => {
         }
 
         setCommentsList(comments);
+        setLoadingComments(false); // Set loading state to false after comments are fetched
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -410,95 +413,99 @@ const PostView = () => {
               Comment
             </button>
           </div>
-          <ul
-            style={{
-              maxWidth: 500,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {/* Comment list */}
-            {commentsList.map((comment, index) => (
-              <li key={index}>
-                <div className="comment" style={{ display: "flex" }}>
-                  {comment.authorPhotoURL && (
-                    <img
-                      src={comment.authorPhotoURL}
-                      alt={comment.authorDisplayName}
-                      className="avatar"
-                      style={{ marginRight: "10px" }}
-                    />
-                  )}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      flex: "1",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span
-                        className="comment-text"
-                        style={{
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          wordWrap: "break-word", // Added to allow breaking long words
-                          textAlign: "left",
-                        }}
-                      >
-                        <strong>{comment.authorDisplayName}</strong>:{" "}
-                        {comment.text}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginTop: 5,
-                      }}
-                    >
-                      <span
-                        className="likes-count"
-                        style={{ marginRight: "10px" }}
-                      >
-                        - Likes: {comment.totalLikes}
-                      </span>
+          {loadingComments ? ( // Display loader while comments are loading
+            <div className="PostViewloader"></div>
+          ) : (
+            <ul
+              style={{
+                maxWidth: 500,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {/* Comment list */}
+              {commentsList.map((comment, index) => (
+                <li key={index}>
+                  <div className="comment" style={{ display: "flex" }}>
+                    {comment.authorPhotoURL && (
                       <img
-                        src={
-                          comment.likes.includes(auth.currentUser.uid)
-                            ? arrowUpFilled
-                            : arrowUp
-                        }
-                        alt="Upvote"
-                        onClick={() => {
-                          if (!comment.updating) {
-                            handleLike(comment.id, index);
-                          }
-                        }}
-                        style={{
-                          width: "24px",
-                          height: "24px",
-                          cursor: "pointer",
-                          marginRight: "10px",
-                          borderRadius: "50%", // Add this line to make the image circular
-                          backgroundColor: comment.likes.includes(
-                            auth.currentUser.uid
-                          )
-                            ? "#1d4ed8"
-                            : "white",
-                        }}
+                        src={comment.authorPhotoURL}
+                        alt={comment.authorDisplayName}
+                        className="avatar"
+                        style={{ marginRight: "10px" }}
                       />
+                    )}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        flex: "1",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span
+                          className="comment-text"
+                          style={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            wordWrap: "break-word", // Added to allow breaking long words
+                            textAlign: "left",
+                          }}
+                        >
+                          <strong>{comment.authorDisplayName}</strong>:{" "}
+                          {comment.text}
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginTop: 5,
+                        }}
+                      >
+                        <span
+                          className="likes-count"
+                          style={{ marginRight: "10px" }}
+                        >
+                          - Likes: {comment.totalLikes}
+                        </span>
+                        <img
+                          src={
+                            comment.likes.includes(auth.currentUser.uid)
+                              ? arrowUpFilled
+                              : arrowUp
+                          }
+                          alt="Upvote"
+                          onClick={() => {
+                            if (!comment.updating) {
+                              handleLike(comment.id, index);
+                            }
+                          }}
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            cursor: "pointer",
+                            marginRight: "10px",
+                            borderRadius: "50%", // Add this line to make the image circular
+                            backgroundColor: comment.likes.includes(
+                              auth.currentUser.uid
+                            )
+                              ? "#1d4ed8"
+                              : "white",
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
       {/* Fullscreen image modal */}
