@@ -28,25 +28,25 @@ const carData = [
     link: "https://www.maserati.com/it/it",
   },
   {
-    type: "JDM",
+    type: "Asian",
     name: "Honda",
     imagePath: require("../images/honda.jpg"),
-    link: "https://www.honda.co.jp/",
+    link: "https://automobiles.honda.com/",
   },
   {
-    type: "JDM",
+    type: "Asian",
     name: "Lexus",
     imagePath: require("../images/lexus.jpg"),
     link: "https://lexus.jp/",
   },
   {
-    type: "JDM",
+    type: "Asian",
     name: "Mitsubishi",
     imagePath: require("../images/mitsubishi.jpg"),
     link: "https://www.mitsubishi-motors.co.jp/",
   },
   {
-    type: "JDM",
+    type: "Asian",
     name: "Mazda",
     imagePath: require("../images/mazda.jpg"),
     link: "https://www.mazda.co.jp/",
@@ -75,6 +75,102 @@ const carData = [
     imagePath: require("../images/jeepwrangler.jpg"),
     link: "https://www.jeep.com/",
   },
+  {
+    type: "European",
+    name: "Porsche",
+    imagePath: require("../images/porscheGallery.png"),
+    link: "https://www.porsche.com/germany/",
+  },
+  {
+    type: "European",
+    name: "Lamborghini",
+    imagePath: require("../images/lamborghiniaventador.jpg"),
+    link: "https://www.lamborghini.com/en-en",
+  },
+  {
+    type: "Asian",
+    name: "Subaru",
+    imagePath: require("../images/subaruGallery.jpg"),
+    link: "https://www.subaru.com/index.html",
+  },
+  {
+    type: "Asian",
+    name: "Hyundai",
+    imagePath: require("../images/hyundaiGallery.jpg"),
+    link: "https://www.hyundai.com/eu.html",
+  },
+  {
+    type: "Asian",
+    name: "Nissan",
+    imagePath: require("../images/nissan350z.jpg"),
+    link: "https://www.nissan.co.uk/",
+  },
+  {
+    type: "European",
+    name: "Alfa Romeo",
+    imagePath: require("../images/alfaromeoGallery.jpg"),
+    link: "https://www.alfaromeo.com/",
+  },
+  {
+    type: "European",
+    name: "Bugatti",
+    imagePath: require("../images/bugattiGallery.png"),
+    link: "https://bugatti.com/",
+  },
+  {
+    type: "American",
+    name: "Aston Martin",
+    imagePath: require("../images/astonmartinGallery.jpg"),
+    link: "https://www.astonmartin.com/en/",
+  },
+  {
+    type: "European",
+    name: "Mercedes-Benz",
+    imagePath: require("../images/mercedesBeznGallery.jpg"),
+    link: "https://www.mercedes-benz.com/en/",
+  },
+  {
+    type: "European",
+    name: "Volkswagen",
+    imagePath: require("../images/volkswagenGallery.jpg"),
+    link: "https://www.volkswagen.de/de.html",
+  },
+  {
+    type: "European",
+    name: "Volvo",
+    imagePath: require("../images/volvoGallery.jpg"),
+    link: "https://www.volvo.com/en/",
+  },
+  {
+    type: "European",
+    name: "McLaren",
+    imagePath: require("../images/mclarenGallery.jpg"),
+    link: "https://www.mclaren.com/",
+  },
+  {
+    type: "European",
+    name: "Peugeot",
+    imagePath: require("../images/peugeotGallery.jpg"),
+    link: "https://www.peugeot.com/en/",
+  },
+  {
+    type: "European",
+    name: "Opel",
+    imagePath: require("../images/opelGallery.jpg"),
+    link: "https://www.vauxhall.co.uk/",
+  },
+  {
+    type: "American",
+    name: "Tesla",
+    imagePath: require("../images/teslaGallery.jpg"),
+    link: "https://www.tesla.com/",
+  },
+  {
+    type: "Asian",
+    name: "Kia",
+    imagePath: require("../images/kiaGallery.jpg"),
+    link: "https://worldwide.kia.com/int",
+  },
 ];
 
 const Gallery = () => {
@@ -82,8 +178,8 @@ const Gallery = () => {
     European: carData
       .filter((car) => car.type === "European")
       .map((car) => car.imagePath.default),
-    JDM: carData
-      .filter((car) => car.type === "JDM")
+    Asian: carData
+      .filter((car) => car.type === "Asian")
       .map((car) => car.imagePath.default),
     American: carData
       .filter((car) => car.type === "American")
@@ -185,7 +281,9 @@ const Gallery = () => {
                 }}
               />
               <h4>{car.name}</h4>
-              <a href={car.link}>Read the latest news about: {car.name}</a>
+              <a href={car.link} target="_blank" rel="noopener noreferrer">
+                Read the latest news about: {car.name}
+              </a>
             </div>
           </div>
         ))}
