@@ -90,3 +90,17 @@
   color: black; /* Set initial color */
   cursor: pointer; /* Set cursor to pointer */
 }
+
+.loader {
+  margin: auto;
+  border: 15px solid #EAF0F6;
+  border-radius: 50%;
+  border-top: 15px solid #007bff;
+  width: 100px;
+  height: 100px;
+  animation: spinner 4s linear infinite;
+}
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

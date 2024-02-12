@@ -7,6 +7,7 @@ import "../pages/PostsView.css";
 
 const PostsView = () => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true); // State to track loading
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,8 +73,10 @@ const PostsView = () => {
           }
         }
         setPosts(postsData);
+        setLoading(false); // Set loading to false when posts are fetched
       } catch (error) {
         console.error("Error fetching posts:", error);
+        setLoading(false); // Set loading to false in case of error
       }
     };
 
@@ -102,68 +105,72 @@ const PostsView = () => {
       <Navbar />
       <div className="posts-view-container">
         <h1>Gears and motors community posts</h1>
-        {posts.map((post) => (
-          <div
-            key={post.id}
-            className="post-container"
-            onClick={() => handlePostClick(post.id)}
-          >
-            <div className="post-item">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                {/* Display number of votes */}
-                <p style={{ marginRight: "1rem" }}>Votes: {post.votes}</p>
-                {/* Display post title */}
-                <div className="post-header">
-                  <h3 className="post-title">
-                    <span>{post.title}</span>
-                  </h3>
+        {loading && ( // Render loader if loading is true
+          <div className="loader"></div>
+        )}
+        {!loading &&
+          posts.map((post) => (
+            <div
+              key={post.id}
+              className="post-container"
+              onClick={() => handlePostClick(post.id)}
+            >
+              <div className="post-item">
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  {/* Display number of votes */}
+                  <p style={{ marginRight: "1rem" }}>Votes: {post.votes}</p>
+                  {/* Display post title */}
+                  <div className="post-header">
+                    <h3 className="post-title">
+                      <span>{post.title}</span>
+                    </h3>
+                  </div>
                 </div>
-              </div>
-              <p className="created-by">
-                Created by:{" "}
-                <img
-                  src={post.creatorPhotoURL}
-                  alt={post.createdBy}
-                  className="avatar-posts"
-                />
-                {post.createdBy} {post.createdAt}
-              </p>
-
-              {post.imageUrl && (
-                <img
-                  src={post.imageUrl}
-                  alt={post.title}
-                  className="post-image"
-                />
-              )}
-
-              {/* Render comments if any */}
-              {post.topComments.length > 0 ? (
-                <div>
-                  <p className="comments-list">
-                    {post.topComments.map((comment, index) => (
-                      <span key={index} className="comment-item">
-                        <p id={`comment-${index}`} className="comment-text">
-                          <img
-                            src={comment.authorPhotoURL}
-                            alt={comment.authorDisplayName}
-                            className="avatar-posts"
-                          />
-                          {comment.authorDisplayName}: {comment.text} - Likes:{" "}
-                          {comment.totalLikes}
-                        </p>
-                      </span>
-                    ))}
-                  </p>
-                </div>
-              ) : (
-                <p id="no-comments" className="no-comments">
-                  Be the first to comment
+                <p className="created-by">
+                  Created by:{" "}
+                  <img
+                    src={post.creatorPhotoURL}
+                    alt={post.createdBy}
+                    className="avatar-posts"
+                  />
+                  {post.createdBy} {post.createdAt}
                 </p>
-              )}
+
+                {post.imageUrl && (
+                  <img
+                    src={post.imageUrl}
+                    alt={post.title}
+                    className="post-image"
+                  />
+                )}
+
+                {/* Render comments if any */}
+                {post.topComments.length > 0 ? (
+                  <div>
+                    <p className="comments-list">
+                      {post.topComments.map((comment, index) => (
+                        <span key={index} className="comment-item">
+                          <p id={`comment-${index}`} className="comment-text">
+                            <img
+                              src={comment.authorPhotoURL}
+                              alt={comment.authorDisplayName}
+                              className="avatar-posts"
+                            />
+                            {comment.authorDisplayName}: {comment.text} - Likes:{" "}
+                            {comment.totalLikes}
+                          </p>
+                        </span>
+                      ))}
+                    </p>
+                  </div>
+                ) : (
+                  <p id="no-comments" className="no-comments">
+                    Be the first to comment
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </>
   );

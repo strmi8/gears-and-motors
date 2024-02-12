@@ -281,7 +281,7 @@ const Gallery = () => {
                 }}
               />
               <h4>{car.name}</h4>
-              <a href={car.link} target="_blank" rel="noopener noreferrer">
+              <a href={car.link} target="_blank" rel="noopener noreferrer" className="galleryHref">
                 Read the latest news about: {car.name}
               </a>
             </div>
