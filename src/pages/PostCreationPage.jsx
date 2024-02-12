@@ -60,7 +60,7 @@ const PostCreationPage = () => {
   return (
     <>
       <Navbar />
-      <div className="container">
+      <div className="CreatePostcontainer">
         <h2>Create a Post</h2>
         <input
           type="text"

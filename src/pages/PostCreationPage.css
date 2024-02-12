@@ -1,4 +1,4 @@
-.container {
+.CreatePostcontainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,11 +6,11 @@
   height: 90vh;
 }
 
-.container h2 {
+.CreatePostcontainer h2 {
   margin-bottom: 20px;
 }
 
-.container input[type="text"] {
+.CreatePostcontainer input[type="text"] {
   width: 35%; /* Make the input field larger */
   border-radius: 10px; /* Apply border radius */
   padding: 10px; /* Add padding for better appearance */
