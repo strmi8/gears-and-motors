@@ -1,0 +1,119 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+}
+
+.container h2 {
+  margin-bottom: 20px;
+}
+
+.container input[type="text"] {
+  width: 35%; /* Make the input field larger */
+  border-radius: 10px; /* Apply border radius */
+  padding: 10px; /* Add padding for better appearance */
+}
+
+.custom-file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload img {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #E8E8E8;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  align-items: center; /* Center the image horizontally */
+}
+
+.custom-file-upload img:hover {
+  background-color: #f0f0f0;
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.custom-file-upload input[type="file"]:hover + img {
+  background-color: #f0f0f0;
+}
+
+.custom-file-upload span {
+  text-align: center;
+  margin-top: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+  }
+  to {
+    transform: translateX(-50%) translateY(0%);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(-50%) translateY(0%);
+  }
+  to {
+    transform: translateX(-50%) translateY(-100%);
+  }
+}
+
+.custom-alert {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  z-index: 9999;
+  animation: slideIn 0.2s forwards; /* Slide-down animation */
+}
+
+.custom-alert.hide {
+  animation: slideOut 0.5s backwards; /* Slide-up animation */
+}
+
+.alert-message {
+  margin-bottom: 10px;
+}
+
+.custom-alert button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-alert button:hover {
+  background-color: #0056b3;
+}
+
