@@ -353,7 +353,12 @@ const PostView = () => {
             src={post.imageUrl}
             alt={post.title}
             onClick={() => handleFullscreenImage(post.imageUrl)}
-            style={{ cursor: "pointer", borderRadius: "3%" }}
+            style={{
+              cursor: "pointer",
+              borderRadius: "3%",
+              width: "650px",
+              height: "auto",
+            }}
           />
           <p className="created-by">
             Created by:{" "}

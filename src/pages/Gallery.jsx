@@ -181,10 +181,11 @@ const Gallery = () => {
                   width: "100%",
                   height: "400px",
                   backgroundSize: "cover",
+                  borderRadius: "4%",
                 }}
               />
               <h4>{car.name}</h4>
-              <a href={car.link}>Find out news about {car.name}</a>
+              <a href={car.link}>Read the latest news about: {car.name}</a>
             </div>
           </div>
         ))}

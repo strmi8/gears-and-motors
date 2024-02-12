@@ -42,9 +42,7 @@ const PostCreationPage = () => {
       imageUrl,
       createdBy: currentUser.uid,
       createdAt: new Date(),
-      upvotes: 0,
-      downvotes: 0,
-      comments: [],
+      votes: 0,
     });
     navigate("/");
   };
@@ -78,14 +76,18 @@ const PostCreationPage = () => {
           )}
           {image ? <span>File Selected</span> : <span>No file chosen</span>}
         </label>
-        <button onClick={handlePostCreation}>Create Post</button>
+        <button className="PostCreationButton" onClick={handlePostCreation}>
+          Create Post
+        </button>
       </div>
       {showAlert && (
         <div className={`custom-alert ${alertStyle ? "" : "hide"}`}>
           <div className="alert-message">
             Please provide a title and select an image.
           </div>
-          <button onClick={handleAlertClose}>Close</button>
+          <button className="PostCreationButton" onClick={handleAlertClose}>
+            Close
+          </button>
         </div>
       )}
     </>

@@ -101,7 +101,7 @@ const PostsView = () => {
     <>
       <Navbar />
       <div className="posts-view-container">
-        <h1>All Posts</h1>
+        <h1>Gears and motors community posts</h1>
         {posts.map((post) => (
           <div
             key={post.id}
