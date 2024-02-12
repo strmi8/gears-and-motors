@@ -4,10 +4,14 @@ import { orderBy, limit } from "firebase/firestore";
 import Navbar from "../components/navbar/Navbar";
 import { useNavigate } from "react-router-dom";
 import "../pages/PostsView.css";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const PostsView = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading
+  const [showAlert, setShowAlert] = useState(false); // State to control the custom alert
+  const [alertStyle, setAlertStyle] = useState();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -97,7 +101,27 @@ const PostsView = () => {
   };
 
   const handlePostClick = (postId) => {
-    navigate(`/post-view`, { state: { postId } });
+    const auth = getAuth();
+
+    // Check if user is logged in
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, navigate to PostView
+        navigate(`/post-view`, { state: { postId } });
+      } else {
+        // User is not signed in, show custom alert
+        setShowAlert(true);
+        setAlertStyle(true);
+      }
+    });
+  };
+
+  const handleAlertClose = () => {
+    setAlertStyle(false);
+    // Wait for the slide-out animation to finish before removing the alert from the DOM
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 500); // Adjust the delay to match the animation duration
   };
 
   return (
@@ -171,6 +195,24 @@ const PostsView = () => {
               </div>
             </div>
           ))}
+
+        {/* Custom alert */}
+        {showAlert && (
+          <div className={`custom-alert-post-view ${alertStyle ? "" : "hide"}`}>
+            <p className="alert-message">Please login to continue.</p>
+            <div className="buttons-container">
+              <button className="PostViewButton" onClick={handleAlertClose}>
+                Close Alert
+              </button>
+              <button
+                className="PostViewButton"
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
