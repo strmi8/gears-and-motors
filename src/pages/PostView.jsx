@@ -20,6 +20,7 @@ import arrowUp from "../images/up-arrow.png";
 import arrowUpFilled from "../images/up-arrow-filled.png";
 import arrowDown from "../images/down-arrow.png";
 import arrowDownFilled from "../images/down-arrow-filled.png";
+import { getAuth } from "firebase/auth";
 
 const PostView = () => {
   const [post, setPost] = useState(null);
@@ -29,6 +30,34 @@ const PostView = () => {
   const [userVote, setUserVote] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [currentUserPhotoURL, setCurrentUserPhotoURL] = useState(null);
+  const [fullscreenImage, setFullscreenImage] = useState(null); // New state for fullscreen image URL
+
+  useEffect(() => {
+    const fetchUserPhoto = async () => {
+      try {
+        // Simulate a delay of 2 seconds
+        setTimeout(async () => {
+          const currentUser = getAuth().currentUser;
+          if (currentUser) {
+            const userDocRef = doc(db, "users", currentUser.uid);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+              setCurrentUserPhotoURL(userDoc.data().photoURL);
+            } else {
+              console.log("User document does not exist");
+            }
+          } else {
+            console.log("No user is currently logged in");
+          }
+        }, 500); // 2000 milliseconds = 2 seconds
+      } catch (error) {
+        console.error("Error fetching user photo:", error);
+      }
+    };
+
+    fetchUserPhoto();
+  }, []);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -183,6 +212,11 @@ const PostView = () => {
 
   const handleCommentSubmit = async () => {
     try {
+      if (comment.length > 100) {
+        console.error("Comment exceeds 100 characters.");
+        return;
+      }
+
       const user = auth.currentUser;
       const newCommentRef = await addDoc(
         collection(db, `posts/${post.id}/comments`),
@@ -204,7 +238,6 @@ const PostView = () => {
         if (userSnapshot.exists()) {
           const userData = userSnapshot.data();
           setCommentsList([
-            ...commentsList,
             {
               id: newCommentDoc.id,
               ...newCommentData,
@@ -212,6 +245,7 @@ const PostView = () => {
               authorPhotoURL: userData.photoURL, // Add author's photo URL
               likes: [],
             },
+            ...commentsList,
           ]);
         }
       }
@@ -297,6 +331,14 @@ const PostView = () => {
     }
   };
 
+  const handleFullscreenImage = (imageUrl) => {
+    setFullscreenImage(imageUrl);
+  };
+
+  const handleCloseFullscreenImage = () => {
+    setFullscreenImage(null);
+  };
+
   if (!post) {
     return <div>Loading...</div>;
   }
@@ -307,7 +349,12 @@ const PostView = () => {
       <div id="post-view-container">
         <div id="post-content">
           <h3>{post.title}</h3>
-          <img src={post.imageUrl} alt={post.title} />
+          <img
+            src={post.imageUrl}
+            alt={post.title}
+            onClick={() => handleFullscreenImage(post.imageUrl)}
+            style={{ cursor: "pointer", borderRadius: "3%" }}
+          />
           <p className="created-by">
             Created by:{" "}
             {post.creatorPhotoURL && (
@@ -337,23 +384,35 @@ const PostView = () => {
               onClick={handleDownvote}
               className="upvote-downvote-img"
             />
+            {currentUserPhotoURL && (
+              <img
+                src={currentUserPhotoURL}
+                alt="User"
+                className="user-photo"
+                style={{ marginLeft: 10 }}
+              />
+            )}
+            <input
+              type="text"
+              placeholder="Add comment (max 100 characters)"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="comment-input"
+              style={{ marginBottom: 0, marginRight: 10 }}
+              maxLength={100}
+            />
+            <button onClick={handleCommentSubmit} className="comment-button">
+              Comment
+            </button>
           </div>
-
-          <input
-            type="text"
-            placeholder="Add comment"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
-          <button onClick={handleCommentSubmit}>Comment</button>
           <ul
             style={{
               maxWidth: 500,
               overflow: "hidden",
               textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
             }}
           >
+            {/* Comment list */}
             {commentsList.map((comment, index) => (
               <li key={index}>
                 <div className="comment" style={{ display: "flex" }}>
@@ -383,12 +442,12 @@ const PostView = () => {
                         style={{
                           overflow: "hidden",
                           textOverflow: "ellipsis",
-                          whiteSpace: "normal",
-                          wordWrap: "break-word",
+                          wordWrap: "break-word", // Added to allow breaking long words
                           textAlign: "left",
                         }}
                       >
-                        {comment.authorDisplayName}: {comment.text}
+                        <strong>{comment.authorDisplayName}</strong>:{" "}
+                        {comment.text}
                       </span>
                     </div>
                     <div
@@ -404,25 +463,31 @@ const PostView = () => {
                       >
                         - Likes: {comment.totalLikes}
                       </span>
-                      <button
+                      <img
+                        src={
+                          comment.likes.includes(auth.currentUser.uid)
+                            ? arrowUpFilled
+                            : arrowUp
+                        }
+                        alt="Upvote"
                         onClick={() => {
                           if (!comment.updating) {
                             handleLike(comment.id, index);
                           }
                         }}
-                        disabled={comment.updating}
                         style={{
+                          width: "24px",
+                          height: "24px",
+                          cursor: "pointer",
+                          marginRight: "10px",
+                          borderRadius: "50%", // Add this line to make the image circular
                           backgroundColor: comment.likes.includes(
                             auth.currentUser.uid
                           )
                             ? "#1d4ed8"
                             : "white",
                         }}
-                      >
-                        {comment.likes.includes(auth.currentUser.uid)
-                          ? "Liked"
-                          : "Like"}
-                      </button>
+                      />
                     </div>
                   </div>
                 </div>
@@ -431,6 +496,19 @@ const PostView = () => {
           </ul>
         </div>
       </div>
+      {/* Fullscreen image modal */}
+      {fullscreenImage && (
+        <div className="fullscreen-modal" onClick={handleCloseFullscreenImage}>
+          <span className="close-button" onClick={handleCloseFullscreenImage}>
+            &times;
+          </span>
+          <img
+            src={fullscreenImage}
+            alt="Fullscreen"
+            className="fullscreen-image"
+          />
+        </div>
+      )}
     </>
   );
 };
