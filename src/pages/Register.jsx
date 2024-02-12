@@ -5,14 +5,13 @@ import { auth, db, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import './RegisterAndLogin.css';
-
-
+import "./RegisterAndLogin.css";
+import avatarUploaded from "../images/checkMark.png";
 
 const Register = () => {
-
   const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [avatarSelected, setAvatarSelected] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -24,22 +23,22 @@ const Register = () => {
     const file = e.target[3].files[0];
 
     try {
-      //Create user
+      // Create user
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
-      //Create a unique image name
+      // Create a unique image name
       const date = new Date().getTime();
       const storageRef = ref(storage, `${displayName + date}`);
 
       await uploadBytesResumable(storageRef, file).then(() => {
         getDownloadURL(storageRef).then(async (downloadURL) => {
           try {
-            //Update profile
+            // Update profile
             await updateProfile(res.user, {
               displayName,
               photoURL: downloadURL,
             });
-            //create user on firestore
+            // Create user on firestore
             await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
               displayName,
@@ -47,6 +46,8 @@ const Register = () => {
               photoURL: downloadURL,
             });
 
+            setAvatarSelected(true);
+            setLoading(false);
             navigate("/");
           } catch (err) {
             console.log(err);
@@ -59,30 +60,47 @@ const Register = () => {
       setErr(true);
       setLoading(false);
     }
-  }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      setAvatarSelected(true);
+    } else {
+      setAvatarSelected(false);
+    }
+  };
 
   return (
-    <div className='formContainer'>
-        <div className='formWrapper'>
-            <span className='logo'>GearsAndMotors</span>
-            <span className='title'>Sign up</span>
-             <form onSubmit={handleSubmit}>
-                <input type='text' placeholder='display name'/>
-                <input type='email' placeholder='email'/>
-                <input type='password' placeholder='password'/>
-                <input required style={{ display: "none" }} type="file" id="file" />
-                <label htmlFor="file">
-                    <img src={avatar} alt="" />
-                    <span>Add an avatar</span>
-                </label>
-                <button disabled={loading}>Sign up</button>
-                {loading && "Uploading and compressing the image please wait..."}
-                {err && <span>Something went wrong
-                  console.log(err)</span>}
-            </form>
-        </div> 
+    <div className="formContainer">
+      <div className="formWrapper">
+        <span className="logo">GearsAndMotors</span>
+        <span className="title">Sign up</span>
+        <form onSubmit={handleSubmit}>
+          <input type="text" placeholder="display name" />
+          <input type="email" placeholder="email" />
+          <input type="password" placeholder="password" />
+          <input
+            required
+            style={{ display: "none" }}
+            type="file"
+            id="file"
+            onChange={handleFileChange}
+          />
+          <label htmlFor="file">
+            {avatarSelected ? (
+              <img src={avatarUploaded} alt="Avatar Selected" />
+            ) : (
+              <img src={avatar} alt="Add an Avatar" />
+            )}
+            <span>{avatarSelected ? "Avatar Selected" : "Add an Avatar"}</span>
+          </label>
+          <button disabled={loading}>Sign up</button>
+          {loading && "Uploading and compressing the image please wait..."}
+          {err && <span>Something went wrong console.log(err)</span>}
+        </form>
+      </div>
     </div>
-  )
+  );
 };
 
 export default Register;

@@ -16,10 +16,10 @@ const Login = () => {
         const password = e.target[1].value;
 
         try {
-        await signInWithEmailAndPassword(auth, email, password);
-        navigate("/")
+            await signInWithEmailAndPassword(auth, email, password);
+            navigate("/")
         } catch (err) {
-        setErr(true);
+            setErr(true);
         }
     };
 
@@ -38,6 +38,6 @@ const Login = () => {
             </div>
         </div>
     )
-  }
+}
 
-export default Login
+export default Login;
