@@ -1,0 +1,134 @@
+/* styles.css */
+
+/* General styles */
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+}
+
+/* Navbar styles (you may need to adjust this based on your Navbar component) */
+.navbar {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+}
+
+/* Container for the entire page content */
+.organize-event-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px;
+}
+
+/* Form container styles */
+.form-container {
+  flex: 1;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  box-sizing: border-box;
+  border: 2px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.required-asterisk {
+  color: red;
+  margin-left: 5px;
+}
+
+/* Map container styles */
+.map-container {
+  flex: 1;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  margin-left: 20px;
+}
+
+/* Submission success container styles */
+.submission-success-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 91vh;
+  margin: 0 20px;
+}
+
+/* Submission success message styles */
+.submission-success-message {
+  background-color: #4caf50;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+}
+
+/* Form element styles */
+.form-heading {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.checkbox-container {
+  display: inline-block;
+}
+
+.checkbox-label {
+  margin-right: 10px;
+}
+
+.form-error {
+  color: red;
+  margin-top: 5px;
+}
+
+.form-button {
+  padding: 8px 16px;
+  background-color: #172554;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color ease;
+}
+
+.form-button:hover {
+  background-color: #007bff;
+}
+
+/* Coordinates container styles */
+.coordinates-container {
+  margin-top: 20px;
+}
+
+.coordinates-heading {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.form-container {
+  height: fit-content;
+}
+
+/* Media query for screens less than 600px */
+@media (max-width: 1200px) {
+  .organize-event-container {
+    flex-direction: column;
+  }
+
+  .map-container {
+    margin-left: 0;
+  }
+}
