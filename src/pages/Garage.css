@@ -1,0 +1,41 @@
+.profileGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.profileCard {
+  width: 30%;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.profileCard:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profileImage {
+  padding: 10px;
+  text-align: center;
+}
+
+.profileImage img {
+  width: auto;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.profileInfo {
+  padding: 10px;
+  text-align: center;
+}
+
+@media (max-width: 750px) {
+  .profileGrid {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}

@@ -9,6 +9,7 @@ import Gallery from "./pages/Gallery.jsx";
 import PostCreationPage from "./pages/PostCreationPage.jsx";
 import PostView from "./pages/PostView.jsx";
 import PostsView from "./pages/PostsView.jsx";
+import Garage from "./pages/Garage.jsx";
 
 
 function App() {
@@ -42,6 +43,8 @@ function App() {
           <Route path="home" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="garage" element={<Garage />} />
+
         </Route>
       </Routes>
     </BrowserRouter>
