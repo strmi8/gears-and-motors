@@ -32,12 +32,11 @@ const PostView = () => {
   const location = useLocation();
   const [currentUserPhotoURL, setCurrentUserPhotoURL] = useState(null);
   const [fullscreenImage, setFullscreenImage] = useState(null);
-  const [loadingComments, setLoadingComments] = useState(true); // Added loading state for comments
+  const [loadingComments, setLoadingComments] = useState(true);
 
   useEffect(() => {
     const fetchUserPhoto = async () => {
       try {
-        // Simulate a delay of 2 seconds
         setTimeout(async () => {
           const currentUser = getAuth().currentUser;
           if (currentUser) {
@@ -51,7 +50,7 @@ const PostView = () => {
           } else {
             console.log("No user is currently logged in");
           }
-        }, 500); // 2000 milliseconds = 2 seconds
+        }, 500);
       } catch (error) {
         console.error("Error fetching user photo:", error);
       }
@@ -72,8 +71,8 @@ const PostView = () => {
         const postDoc = await getDoc(doc(db, "posts", postId));
         if (postDoc.exists()) {
           const postData = postDoc.data();
-          const createdAtTimestamp = postData.createdAt.toDate(); // Convert Firestore timestamp to JavaScript Date object
-          const createdAtString = formatCreatedAtDate(createdAtTimestamp); // Format the date into a human-readable string
+          const createdAtTimestamp = postData.createdAt.toDate();
+          const createdAtString = formatCreatedAtDate(createdAtTimestamp);
           const userRef = doc(db, "users", postData.createdBy);
           const userSnapshot = await getDoc(userRef);
           if (userSnapshot.exists()) {
@@ -83,7 +82,7 @@ const PostView = () => {
               ...postData,
               createdBy: userData.displayName,
               creatorPhotoURL: userData.photoURL,
-              createdAt: createdAtTimestamp, // Use the formatted date string
+              createdAt: createdAtTimestamp,
             });
           }
         } else {
@@ -102,7 +101,7 @@ const PostView = () => {
       if (!post) return;
 
       try {
-        setLoadingComments(true); // Set loading state to true before fetching comments
+        setLoadingComments(true);
         const commentsQuerySnapshot = await getDocs(
           collection(db, `posts/${post.id}/comments`)
         );
@@ -122,7 +121,7 @@ const PostView = () => {
               id: commentDoc.id,
               ...commentData,
               authorDisplayName: userData.displayName,
-              authorPhotoURL: userData.photoURL, // Add author's photo URL
+              authorPhotoURL: userData.photoURL,
               likes: likes,
               updating: false,
             });
@@ -130,7 +129,7 @@ const PostView = () => {
         }
 
         setCommentsList(comments);
-        setLoadingComments(false); // Set loading state to false after comments are fetched
+        setLoadingComments(false);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -192,13 +191,13 @@ const PostView = () => {
       const postRefetch = await getDoc(doc(db, "posts", post.id));
       if (postRefetch.exists()) {
         const postData = postRefetch.data();
-        const createdAtTimestamp = postData.createdAt.toDate(); // Convert Firestore timestamp to JavaScript Date object
+        const createdAtTimestamp = postData.createdAt.toDate();
         setPost({
           id: postRefetch.id,
           ...postData,
           createdBy: post.createdBy,
-          creatorPhotoURL: post.creatorPhotoURL, // Add creator's photo URL
-          createdAt: createdAtTimestamp, // Use the formatted date string
+          creatorPhotoURL: post.creatorPhotoURL,
+          createdAt: createdAtTimestamp,
         });
       }
 
@@ -250,7 +249,7 @@ const PostView = () => {
               id: newCommentDoc.id,
               ...newCommentData,
               authorDisplayName: userData.displayName,
-              authorPhotoURL: userData.photoURL, // Add author's photo URL
+              authorPhotoURL: userData.photoURL,
               likes: [],
             },
             ...commentsList,
@@ -368,7 +367,12 @@ const PostView = () => {
     <>
       <Navbar />
       <div id="post-view-container">
-        <div id="post-content">
+        <div
+          id="post-content"
+          style={{
+            width: "650px",
+          }}
+        >
           <h3>{post.title}</h3>
           <img
             src={post.imageUrl}
@@ -381,6 +385,17 @@ const PostView = () => {
               height: "auto",
             }}
           />
+          {post.description && (
+            <p
+              className="post-description-paragraph"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {post.description}
+            </p>
+          )}
           <p className="created-by">
             Created by:{" "}
             {post.creatorPhotoURL && (
@@ -431,7 +446,7 @@ const PostView = () => {
               Comment
             </button>
           </div>
-          {loadingComments ? ( // Display loader while comments are loading
+          {loadingComments ? (
             <div className="PostViewloader"></div>
           ) : (
             <ul
@@ -441,7 +456,6 @@ const PostView = () => {
                 textOverflow: "ellipsis",
               }}
             >
-              {/* Comment list */}
               {commentsList.map((comment, index) => (
                 <li key={index}>
                   <div className="comment" style={{ display: "flex" }}>
@@ -471,7 +485,7 @@ const PostView = () => {
                           style={{
                             overflow: "hidden",
                             textOverflow: "ellipsis",
-                            wordWrap: "break-word", // Added to allow breaking long words
+                            wordWrap: "break-word",
                             textAlign: "left",
                           }}
                         >
@@ -509,7 +523,7 @@ const PostView = () => {
                             height: "24px",
                             cursor: "pointer",
                             marginRight: "10px",
-                            borderRadius: "50%", // Add this line to make the image circular
+                            borderRadius: "50%",
                             backgroundColor: comment.likes.includes(
                               auth.currentUser.uid
                             )
@@ -526,7 +540,6 @@ const PostView = () => {
           )}
         </div>
       </div>
-      {/* Fullscreen image modal */}
       {fullscreenImage && (
         <div className="fullscreen-modal" onClick={handleCloseFullscreenImage}>
           <span className="close-button" onClick={handleCloseFullscreenImage}>

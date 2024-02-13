@@ -17,6 +17,7 @@ import uploadImageFull from "../images/uploadImageFull.png";
 
 const PostCreationPage = () => {
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [alertStyle, setAlertStyle] = useState();
@@ -39,6 +40,7 @@ const PostCreationPage = () => {
     const imageUrl = await getDownloadURL(storageRef);
     await addDoc(collection(db, "posts"), {
       title,
+      description,
       imageUrl,
       createdBy: currentUser.uid,
       createdAt: new Date(),
@@ -76,6 +78,12 @@ const PostCreationPage = () => {
           )}
           {image ? <span>File Selected</span> : <span>No file chosen</span>}
         </label>
+        <textarea
+          placeholder="Write a description"
+          value={description}
+          maxLength={2000}
+          onChange={(e) => setDescription(e.target.value)}
+        />
         <button className="PostCreationButton" onClick={handlePostCreation}>
           Create Post
         </button>
