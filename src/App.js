@@ -9,6 +9,8 @@ import Gallery from "./pages/Gallery.jsx";
 import PostCreationPage from "./pages/PostCreationPage.jsx";
 import PostView from "./pages/PostView.jsx";
 import PostsView from "./pages/PostsView.jsx";
+import OrganizeEvent from "./pages/OrganizeEvent.jsx";
+import ViewEvents from "./pages/ViewEvents.jsx";
 import Garage from "./pages/Garage.jsx";
 
 
@@ -43,6 +45,8 @@ function App() {
           <Route path="home" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="organize-event" element={<OrganizeEvent />} />
+          <Route path="view-events" element={<ViewEvents />} />
           <Route path="garage" element={<Garage />} />
 
         </Route>
