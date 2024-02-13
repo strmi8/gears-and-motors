@@ -83,7 +83,7 @@ const PostView = () => {
               ...postData,
               createdBy: userData.displayName,
               creatorPhotoURL: userData.photoURL,
-              createdAt: createdAtString, // Use the formatted date string
+              createdAt: createdAtTimestamp, // Use the formatted date string
             });
           }
         } else {
@@ -193,13 +193,12 @@ const PostView = () => {
       if (postRefetch.exists()) {
         const postData = postRefetch.data();
         const createdAtTimestamp = postData.createdAt.toDate(); // Convert Firestore timestamp to JavaScript Date object
-        const createdAtString = formatCreatedAtDate(createdAtTimestamp); // Format the date into a human-readable string
         setPost({
           id: postRefetch.id,
           ...postData,
           createdBy: post.createdBy,
           creatorPhotoURL: post.creatorPhotoURL, // Add creator's photo URL
-          createdAt: createdAtString, // Use the formatted date string
+          createdAt: createdAtTimestamp, // Use the formatted date string
         });
       }
 
