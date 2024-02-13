@@ -192,11 +192,14 @@ const PostView = () => {
       const postRefetch = await getDoc(doc(db, "posts", post.id));
       if (postRefetch.exists()) {
         const postData = postRefetch.data();
+        const createdAtTimestamp = postData.createdAt.toDate(); // Convert Firestore timestamp to JavaScript Date object
+        const createdAtString = formatCreatedAtDate(createdAtTimestamp); // Format the date into a human-readable string
         setPost({
           id: postRefetch.id,
           ...postData,
           createdBy: post.createdBy,
           creatorPhotoURL: post.creatorPhotoURL, // Add creator's photo URL
+          createdAt: createdAtString, // Use the formatted date string
         });
       }
 
@@ -349,7 +352,8 @@ const PostView = () => {
     return <div>Loading...</div>;
   }
 
-  function formatCreatedAtDate(date) {
+  function formatCreatedAtDate(timestamp) {
+    const date = new Date(timestamp);
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
@@ -390,7 +394,7 @@ const PostView = () => {
                 &nbsp;
               </span>
             )}
-            {post.createdBy} {post.createdAt}
+            {post.createdBy} {formatCreatedAtDate(post.createdAt)}
           </p>
           <div style={{ display: "flex", alignItems: "center" }}>
             <img
