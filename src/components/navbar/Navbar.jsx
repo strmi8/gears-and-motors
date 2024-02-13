@@ -58,6 +58,11 @@ const Navbar = () => {
             Organize an event
           </Link>
         </li>
+        <li>
+          <Link to="/view-events" className="nav-link">
+            View events
+          </Link>
+        </li>
         {authenticated ? (
           <li>
             <Link className="nav-link" onClick={handleLogout}>

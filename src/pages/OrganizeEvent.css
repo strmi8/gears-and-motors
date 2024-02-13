@@ -1,6 +1,3 @@
-/* styles.css */
-
-/* General styles */
 body {
   margin: 0;
   font-family: "Arial", sans-serif;
@@ -22,7 +19,7 @@ body {
 
 /* Form container styles */
 .form-container {
-  flex: 1;
+  flex: 0.5;
   padding: 20px;
   background-color: #f0f0f0;
   border-radius: 8px;
@@ -55,13 +52,47 @@ body {
   margin: 0 20px;
 }
 
+/* Submission success container styles */
+.submission-success-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Center the message vertically on the page */
+}
+
 /* Submission success message styles */
 .submission-success-message {
-  background-color: #4caf50;
-  padding: 20px;
+  background-color: #172554;
+  padding: 30px;
   border-radius: 8px;
   text-align: center;
   color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submission-success-message h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.submission-success-message p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* View events link styles */
+.view-events-link {
+  display: inline-block;
+  background-color: #0056b3;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color ease;
+}
+
+.view-events-link:hover {
+  background-color: #007bff;
 }
 
 /* Form element styles */
@@ -120,6 +151,7 @@ body {
 
 .form-container {
   height: fit-content;
+  max-height: 91vh;
 }
 
 /* Media query for screens less than 600px */
@@ -131,4 +163,40 @@ body {
   .map-container {
     margin-left: 0;
   }
+}
+
+/* Override InfoWindow styles */
+.gm-style .gm-style-iw {
+  font-weight: 300;
+  font-size: 13px;
+  overflow: hidden;
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+.gm-style .gm-style-iw-c {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  transform: translate3d(-50%, -100%, 0);
+  background-color: white;
+  border-radius: 8px;
+  -webkit-box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.3);
+  padding: 0 !important; /* Important to override inline styles */
+}
+
+/* Adjust padding for better alignment */
+.gm-style .gm-style-iw-d {
+  padding: 6px 10px !important; /* Adjust the top and bottom padding as needed */
+}
+
+.gm-style .gm-style-iw-t {
+  padding: 0 !important;
+}
+
+.gm-style .gm-ui-hover-effect {
+  margin: 0 !important;
 }

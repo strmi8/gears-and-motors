@@ -12,6 +12,7 @@ import {
 } from "../firebase";
 import { getAuth } from "firebase/auth";
 import "./OrganizeEvent.css";
+import { Link } from "react-router-dom";
 
 const center = {
   lat: 45.55664942442688,
@@ -285,6 +286,9 @@ const OrganizeEvent = () => {
           <div className="submission-success-message">
             <h2>Event Submitted Successfully!</h2>
             <p>Your event has been successfully submitted. Thank you!</p>
+            <Link to="/view-events" className="view-events-link">
+              View events
+            </Link>
           </div>
         </div>
       )}
