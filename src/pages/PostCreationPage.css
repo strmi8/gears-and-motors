@@ -10,10 +10,13 @@
   margin-bottom: 20px;
 }
 
-.CreatePostcontainer input[type="text"] {
-  width: 35%; /* Make the input field larger */
-  border-radius: 10px; /* Apply border radius */
-  padding: 10px; /* Add padding for better appearance */
+.CreatePostcontainer input[type="text"],
+.CreatePostcontainer textarea {
+  width: 35%;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-family: Arial, sans-serif;
 }
 
 .custom-file-upload {
@@ -30,16 +33,16 @@
 .custom-file-upload img {
   width: 100px;
   height: 100px;
-  border: 2px solid #E8E8E8;
+  border: 2px solid #e8e8e8;
   border-radius: 5px;
   margin-bottom: 10px;
   margin-top: 10px;
-  align-items: center; /* Center the image horizontally */
+  align-items: center;
 }
 
 .custom-file-upload img:hover {
   background-color: #f0f0f0;
-  cursor: pointer; /* Change cursor to pointer on hover */
+  cursor: pointer;
 }
 
 .custom-file-upload input[type="file"]:hover + img {
@@ -49,6 +52,7 @@
 .custom-file-upload span {
   text-align: center;
   margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .PostCreationButton {
@@ -93,11 +97,11 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   z-index: 9999;
-  animation: slideIn 0.2s forwards; /* Slide-down animation */
+  animation: slideIn 0.2s forwards;
 }
 
 .custom-alert.hide {
-  animation: slideOut 0.5s backwards; /* Slide-up animation */
+  animation: slideOut 0.5s backwards;
 }
 
 .alert-message {
@@ -116,4 +120,3 @@
 .custom-alert .PostCreationButton:hover {
   background-color: #0056b3;
 }
-
