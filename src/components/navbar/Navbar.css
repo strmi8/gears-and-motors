@@ -2,7 +2,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  
 }
 
 .active {
@@ -17,9 +16,8 @@ nav {
   color: white;
   position: sticky;
   top: 0;
-  z-index: 1000; /* Ensure the navbar appears above other elements */
+  z-index: 1000;
 }
-
 
 nav .title {
   font-size: 1.5rem;
@@ -60,9 +58,8 @@ nav .menu {
   width: 2.25rem;
   height: 2rem;
   cursor: pointer;
-  z-index: 1000; /* Ensure the menu appears above other elements */
+  z-index: 1000;
 }
-
 
 nav .menu span {
   height: 0.4rem;
@@ -71,11 +68,90 @@ nav .menu span {
   border-radius: 0.2rem;
 }
 
+.dropdown {
+  padding: 0.5rem;
+  margin-inline: 8px;
+  border-radius: 0.5rem;
+} 
+
+.dropdown:hover {
+  background-color: #172554;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #0f172a;
+  border-radius: 0.5rem;
+  z-index: 1000;
+}
+
+.dropdown-menu.open {
+  display: block;
+  right: 0;
+  padding-inline-start: 0px;
+  padding-block: 10px;
+  margin-top: 10px;
+}
+
+.dropdown-menu li {
+  list-style: none;
+}
+
+.dropdown-menu li a {
+  display: block;
+  text-decoration: none;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #172554;
+}
+
+.dropdown {
+  align-self: center;
+}
+
+nav .logo img {
+  width: 40px;
+  height: auto;
+  margin-left: 10px;
+}
+
+.dropdown-menu-items.open {
+  display: block;
+  right: 0;
+  padding-inline-start: 0px;
+  padding-block: 10px;
+  margin-top: 10px;
+}
+
+.rate-car-container {
+  position: relative;
+  display: inline-block;
+}
+
+.rate-car-container .dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px); 
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 120px; 
+  max-width: 300px; 
+  width: auto;
+}
+
+ul {
+  padding-inline-start: 0px;
+}
+
 @media (max-width: 750px) {
   nav .menu {
-    display: flex; 
+    display: flex;
   }
-  
+
   nav {
     flex-direction: column;
     align-items: flex-start;
@@ -105,12 +181,35 @@ nav .menu span {
 
   nav .logo {
     display: flex;
-    margin-top: 12px; /* Adjust the top margin as needed */
+    margin-top: 12px;
   }
-}
 
-nav .logo img {
-  width: 40px; /* Adjust the width as needed */
-  height: auto; /* Maintain aspect ratio */
-  margin-left: 10px;
+  /* Adjust dropdown menu styles for small screens */
+  .dropdown-menu {
+    position: static;
+    display: block;
+    background-color: #0f172a;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .dropdown-menu.open {
+    display: block;
+  }
+  
+  .dropdown-menu li {
+    text-align: center;
+  }
+  
+  .dropdown-menu li a {
+    display: block;
+    text-decoration: none;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+  
+  .dropdown-menu li a:hover {
+    background-color: #172554;
+  }
 }
