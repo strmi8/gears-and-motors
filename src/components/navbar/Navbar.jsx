@@ -126,11 +126,13 @@ const Navbar = () => {
         </li>
         {isSmallScreen && hamburgerClicked && (
           <>
-            <li>
-              <Link to="/create-post" className="nav-link">
-                Create Post
-              </Link>
-            </li>
+            {authenticated && (
+              <li>
+                <Link to="/create-post" className="nav-link">
+                  Create Post
+                </Link>
+              </li>
+            )}
             <li>
               <Link to="/posts-view" className="nav-link">
                 View Posts
@@ -141,67 +143,89 @@ const Navbar = () => {
                 View events
               </Link>
             </li>
-            <li>
-              <Link to="/organize-event" className="nav-link">
-                Organize an event
-              </Link>
-            </li>
+            {authenticated && (
+              <li>
+                <Link to="/organize-event" className="nav-link">
+                  Organize an event
+                </Link>
+              </li>
+            )}
           </>
         )}
         {!isSmallScreen && (
           <>
-            <li className={`dropdown ${rateCarMenuOpen ? "highlight" : ""}`}>
-              <div className="rate-car-container">
-                <span
-                  className={`nav-link ${rateCarMenuOpen ? "highlighted" : ""}`}
-                  onClick={toggleRateCarMenu}
-                >
-                  Rate my car
-                </span>
-                <ul
-                  className={
-                    rateCarMenuOpen ? "dropdown-menu open" : "dropdown-menu"
-                  }
-                >
-                  <li>
-                    <Link to="/create-post" className="nav-link">
-                      Create Post
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/posts-view" className="nav-link">
-                      View Posts
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li className={`dropdown ${eventsMenuOpen ? "highlight" : ""}`}>
-              <div className="events-container">
-                <span
-                  className={`nav-link ${eventsMenuOpen ? "highlighted" : ""}`}
-                  onClick={toggleEventsMenu}
-                >
-                  Events
-                </span>
-                <ul
-                  className={
-                    eventsMenuOpen ? "dropdown-menu open" : "dropdown-menu"
-                  }
-                >
-                  <li>
-                    <Link to="/view-events" className="nav-link">
-                      View events
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/organize-event" className="nav-link">
-                      Organize an event
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </li>
+            {authenticated ? (
+              <li className={`dropdown ${rateCarMenuOpen ? "highlight" : ""}`}>
+                <div className="rate-car-container">
+                  <span
+                    className={`nav-link ${
+                      rateCarMenuOpen ? "highlighted" : ""
+                    }`}
+                    onClick={toggleRateCarMenu}
+                  >
+                    Rate my car
+                  </span>
+                  <ul
+                    className={
+                      rateCarMenuOpen ? "dropdown-menu open" : "dropdown-menu"
+                    }
+                  >
+                    <li>
+                      <Link to="/create-post" className="nav-link">
+                        Create Post
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/posts-view" className="nav-link">
+                        View Posts
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            ) : (
+              <li>
+                <Link to="/posts-view" className="nav-link">
+                  View Posts
+                </Link>
+              </li>
+            )}
+            {authenticated ? (
+              <li className={`dropdown ${eventsMenuOpen ? "highlight" : ""}`}>
+                <div className="events-container">
+                  <span
+                    className={`nav-link ${
+                      eventsMenuOpen ? "highlighted" : ""
+                    }`}
+                    onClick={toggleEventsMenu}
+                  >
+                    Events
+                  </span>
+                  <ul
+                    className={
+                      eventsMenuOpen ? "dropdown-menu open" : "dropdown-menu"
+                    }
+                  >
+                    <li>
+                      <Link to="/view-events" className="nav-link">
+                        View events
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/organize-event" className="nav-link">
+                        Organize an event
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            ) : (
+              <li>
+                <Link to="/view-events" className="nav-link">
+                  View events
+                </Link>
+              </li>
+            )}
           </>
         )}
 
