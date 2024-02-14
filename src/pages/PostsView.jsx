@@ -171,21 +171,21 @@ const PostsView = () => {
                 {/* Render comments if any */}
                 {post.topComments.length > 0 ? (
                   <div>
-                    <p className="comments-list">
-                      {post.topComments.map((comment, index) => (
-                        <span key={index} className="comment-item">
-                          <p id={`comment-${index}`} className="comment-text">
-                            <img
-                              src={comment.authorPhotoURL}
-                              alt={comment.authorDisplayName}
-                              className="avatar-posts"
-                            />
+                    {post.topComments.map((comment, index) => (
+                      <span key={index} className="comment-item">
+                        <div id={`comment-${index}`} className="comment-text">
+                          <img
+                            src={comment.authorPhotoURL}
+                            alt={comment.authorDisplayName}
+                            className="avatar-posts"
+                          />
+                          <span>
                             {comment.authorDisplayName}: {comment.text} - Likes:{" "}
                             {comment.totalLikes}
-                          </p>
-                        </span>
-                      ))}
-                    </p>
+                          </span>
+                        </div>
+                      </span>
+                    ))}
                   </div>
                 ) : (
                   <p id="no-comments" className="no-comments">
