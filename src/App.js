@@ -36,8 +36,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  console.log("Is user authenticated?", authenticated);
-
   const ProtectedRoute = ({ children }) => {
     if (authenticated === null) {
       // Authentication state is being checked, render nothing or a loading indicator

@@ -129,13 +129,13 @@ const Navbar = () => {
             {authenticated && (
               <li>
                 <Link to="/create-post" className="nav-link">
-                  Create Post
+                  Create post
                 </Link>
               </li>
             )}
             <li>
               <Link to="/posts-view" className="nav-link">
-                View Posts
+                View posts
               </Link>
             </li>
             <li>
@@ -172,12 +172,12 @@ const Navbar = () => {
                   >
                     <li>
                       <Link to="/create-post" className="nav-link">
-                        Create Post
+                        Create post
                       </Link>
                     </li>
                     <li>
                       <Link to="/posts-view" className="nav-link">
-                        View Posts
+                        View posts
                       </Link>
                     </li>
                   </ul>
@@ -186,7 +186,7 @@ const Navbar = () => {
             ) : (
               <li>
                 <Link to="/posts-view" className="nav-link">
-                  View Posts
+                  View posts
                 </Link>
               </li>
             )}

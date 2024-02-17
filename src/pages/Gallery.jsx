@@ -257,6 +257,27 @@ const Gallery = () => {
             {carType}
           </button>
         ))}
+        <button
+          id="all"
+          className={`btn ${currentColumn === "all" ? "active" : ""}`}
+          onClick={() => handleButtonClick("all")}
+        >
+          Cockpit
+        </button>{" "}
+        <button
+          id="all"
+          className={`btn ${currentColumn === "all" ? "active" : ""}`}
+          onClick={() => handleButtonClick("all")}
+        >
+          Engine bay
+        </button>{" "}
+        <button
+          id="all"
+          className={`btn ${currentColumn === "all" ? "active" : ""}`}
+          onClick={() => handleButtonClick("all")}
+        >
+          Paint job
+        </button>
       </div>
 
       <div className="row">
@@ -281,7 +302,12 @@ const Gallery = () => {
                 }}
               />
               <h4>{car.name}</h4>
-              <a href={car.link} target="_blank" rel="noopener noreferrer" className="galleryHref">
+              <a
+                href={car.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="galleryHref"
+              >
                 Read the latest news about: {car.name}
               </a>
             </div>

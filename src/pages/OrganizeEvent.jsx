@@ -85,23 +85,16 @@ const OrganizeEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (
-      !eventName ||
-      eventType.length === 0 ||
-      !eventDateTime ||
-      !currentCoordinates ||
-      !validateDescription()
+      !eventName ||eventType.length === 0 ||!eventDateTime ||!currentCoordinates ||!validateDescription()
     ) {
       alert(
         "Please fill in all required fields, including current coordinates and description."
       );
       return;
     }
-
     try {
       const user = getAuth().currentUser;
-
       if (user) {
         const eventRef = await addDoc(collection(db, "events"), {
           eventName,
@@ -111,11 +104,8 @@ const OrganizeEvent = () => {
           coordinates: currentCoordinates,
           authorId: user.uid,
         });
-
         const eventDoc = await getDoc(eventRef);
-
         if (eventDoc.exists()) {
-          // Successfully added to Firestore
           console.log("Event added to Firestore:", eventDoc.data());
           setSubmissionSuccess(true);
         } else {
@@ -127,7 +117,6 @@ const OrganizeEvent = () => {
     } catch (error) {
       console.error("Error submitting event:", error);
     }
-
     setEventName("");
     setEventType([]);
     setEventDateTime("");
@@ -193,21 +182,6 @@ const OrganizeEvent = () => {
                     Style
                   </label>
                   <br />
-                  <label className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      value="Test"
-                      checked={eventType.includes("Test")}
-                      onChange={() =>
-                        setEventType((prevType) =>
-                          prevType.includes("Test")
-                            ? prevType.filter((type) => type !== "Test")
-                            : [...prevType, "Test"]
-                        )
-                      }
-                    />
-                    Test
-                  </label>
                 </div>
               </label>
               <label className="form-label">
