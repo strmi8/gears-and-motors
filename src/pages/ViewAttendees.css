@@ -1,0 +1,41 @@
+.attendeesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.attendeeCard {
+  width: 30%;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.attendeeCard:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.attendeeImage {
+  padding: 10px;
+  text-align: center;
+}
+
+.attendeeImage img {
+  width: auto;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.attendeeInfo {
+  padding: 10px;
+  text-align: center;
+}
+
+@media (max-width: 750px) {
+  .attendeesGrid {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}

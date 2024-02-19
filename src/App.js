@@ -12,6 +12,7 @@ import PostsView from "./pages/PostsView";
 import OrganizeEvent from "./pages/OrganizeEvent";
 import ViewEvents from "./pages/ViewEvents";
 import Garage from "./pages/Garage";
+import ViewAttendees from "./pages/ViewAttendees";
 
 function App() {
   const [authenticated, setAuthenticated] = useState(null);
@@ -59,6 +60,7 @@ function App() {
           <Route path="create-post" element={<ProtectedRoute><PostCreationPage /></ProtectedRoute>} />
           <Route path="post-view" element={<ProtectedRoute><PostView /></ProtectedRoute>} />
           <Route path="posts-view" element={<PostsView />} />
+          <Route path="View-attendees" element={<ViewAttendees />} />
           <Route path="organize-event" element={<ProtectedRoute><OrganizeEvent /></ProtectedRoute>} />
           <Route path="view-events" element={<ViewEvents />} />
           <Route path="garage" element={<Garage />} />

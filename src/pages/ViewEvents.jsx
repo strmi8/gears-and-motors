@@ -21,6 +21,7 @@ import LocationPinBlueSVG from "../images/location_pin_blue.svg";
 import LocationPinRedSVG from "../images/location_pin_red.svg";
 import LocationPinGreenSVG from "../images/location_pin_green.svg";
 import { getAuth } from "firebase/auth";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const center = {
   lat: 45.55664942442688,
@@ -38,6 +39,7 @@ const ViewEvents = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [attendingEvents, setAttendingEvents] = useState([]);
   const [userEvents, setUserEvents] = useState([]);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     // Function to fetch events for the current user
@@ -92,7 +94,7 @@ const ViewEvents = () => {
         const userPromises = [];
         eventsSnapshot.forEach((doc) => {
           const eventData = doc.data();
-          const eventDateTime = new Date(eventData.eventDateTime); 
+          const eventDateTime = new Date(eventData.eventDateTime);
           if (eventDateTime > currentDate) {
             const userPromise = getUserDisplayName(eventData.authorId).then(
               (displayName) => {
@@ -195,10 +197,14 @@ const ViewEvents = () => {
           let updatedEvents = attendingDoc.data().events;
           const isAttending = updatedEvents.includes(event.id);
           if (isAttending) {
-            updatedEvents = updatedEvents.filter((eventId) => eventId !== event.id);
+            updatedEvents = updatedEvents.filter(
+              (eventId) => eventId !== event.id
+            );
             await setDoc(attendingRef, { events: updatedEvents });
             setAttendingEvents((prevAttendingEvents) =>
-              prevAttendingEvents.filter((attendingEvent) => attendingEvent.id !== event.id)
+              prevAttendingEvents.filter(
+                (attendingEvent) => attendingEvent.id !== event.id
+              )
             );
           } else {
             updatedEvents.push(event.id);
@@ -286,7 +292,6 @@ const ViewEvents = () => {
     }
   };
 
-  // After the `onAttendButtonClick` function
   const onCancelEventButtonClick = async (selectedEvent) => {
     try {
       const user = getAuth().currentUser;
@@ -339,6 +344,11 @@ const ViewEvents = () => {
     }
   };
 
+  const onViewAttendeesButtonClick = (eventId) => {
+    // Navigate to the View Attendees page with the event ID passed as a parameter
+    navigate(`/View-attendees`, { state: { eventId } });
+  };
+  
   return (
     <>
       <Navbar />
@@ -412,6 +422,22 @@ const ViewEvents = () => {
                             : "Attend"}
                         </button>
                       )}
+                      <button
+                        onClick={() => onViewAttendeesButtonClick(event.id)} // Pass event ID as a parameter
+                        className="view-attendees-btn"
+                        style={{
+                          padding: "8px 16px",
+                          backgroundColor: "#007bff",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          transition: "background-color ease",
+                          marginLeft: "10px",
+                        }}
+                      >
+                        View Attendees
+                      </button>
                     </div>
                   ))
                 ) : (
@@ -539,6 +565,24 @@ const ViewEvents = () => {
                           : "Attend"}
                       </button>
                     )}
+                    <button
+                      onClick={() =>
+                        onViewAttendeesButtonClick(selectedEvent.id)
+                      } // Pass event ID as a parameter
+                      className="view-attendees-btn"
+                      style={{
+                        padding: "8px 16px",
+                        backgroundColor: "#007bff",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        transition: "background-color ease",
+                        marginTop: "10px",
+                      }}
+                    >
+                      View Attendees
+                    </button>
                     {!getAuth().currentUser && (
                       <p style={{ marginTop: "8px" }}>
                         <em>Login to attend events.</em>
