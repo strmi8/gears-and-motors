@@ -54,27 +54,28 @@ const ViewEvents = () => {
             where("authorId", "==", user.uid)
           );
           const querySnapshot = await getDocs(q);
-
           const userEventsData = [];
           querySnapshot.forEach((doc) => {
             const eventData = doc.data();
             const eventDateTime = new Date(eventData.eventDateTime);
-
-            userEventsData.push({
-              id: doc.id,
-              ...eventData,
-              formattedDateTime: eventDateTime.toLocaleDateString("en-US", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-              }),
-            });
+            const userPromise = getUserDisplayName(eventData.authorId).then(
+              (displayName) => {
+                userEventsData.push({
+                  id: doc.id,
+                  ...eventData,
+                  authorDisplayName: displayName,
+                  formattedDateTime: eventDateTime.toLocaleDateString("en-US", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                  }),
+                });
+              }
+            );
           });
-
           setUserEvents(userEventsData);
-          console.log("Events for the current user:", userEventsData);
         }
       } catch (error) {
         console.error("Error fetching events for the current user:", error);
@@ -348,7 +349,7 @@ const ViewEvents = () => {
     // Navigate to the View Attendees page with the event ID passed as a parameter
     navigate(`/View-attendees`, { state: { eventId } });
   };
-  
+
   return (
     <>
       <Navbar />
